@@ -365,7 +365,7 @@ trait HasTeams
             ->pluck('id')
             ->all();
 
-        $role = $this->teamRole($team)->load(['abilities' => function ($query) use ($action_entity, $permission_ids) {
+        $role = $this->teamRole($team)?->load(['abilities' => function ($query) use ($action_entity, $permission_ids) {
             $query->where([
                 'abilities.entity_id' => $action_entity->id,
                 'abilities.entity_type' => get_class($action_entity),
@@ -387,9 +387,9 @@ trait HasTeams
         }]);
 
         foreach ([$role, ...$groups, $this] as $entity) {
+            if (is_null($entity)) continue;
 
             foreach ($entity->abilities as $ability) {
-
                 if ($ability->pivot->forbidden) {
                     $forbidden = max($forbidden, $entity::class === TeamsFacade::model('role') ? $ROLE_FORBIDDEN : ($entity::class === TeamsFacade::model('group') ? $GROUP_FORBIDDEN : $USER_FORBIDDEN));
                 } else {

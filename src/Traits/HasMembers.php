@@ -325,7 +325,7 @@ trait HasMembers
      * @return object|null
      * @throws Exception
      */
-    public function getRole(int|string $keyword): object|null
+    public function getRole(int|string|null $keyword): object|null
     {
         return $this->roles()->firstWhere((is_numeric($keyword) ? 'id' : 'code'), $keyword);
     }
